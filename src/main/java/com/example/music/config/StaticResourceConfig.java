@@ -12,13 +12,13 @@ public class StaticResourceConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Serve frontend SPA
         registry.addResourceHandler("/frontend/**")
-                .addResourceLocations("file:static/frontend/", "classpath:/static/frontend/");
+                .addResourceLocations("file:./static/frontend/", "classpath:/static/frontend/");
         // Serve admin SPA
         registry.addResourceHandler("/admin/**")
-                .addResourceLocations("file:static/admin/", "classpath:/static/admin/");
+                .addResourceLocations("file:./static/admin/", "classpath:/static/admin/");
         // Root static resources
         registry.addResourceHandler("/*.ico", "/*.svg", "/*.png", "/*.jpg", "/*.webp")
-                .addResourceLocations("file:static/frontend/", "classpath:/static/");
+                .addResourceLocations("file:./static/frontend/", "classpath:/static/");
     }
 
     @Override
