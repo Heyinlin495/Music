@@ -1,0 +1,228 @@
+.sidebar {
+  width: 320px;
+  min-width: 320px;
+  background: #FFFAF2;
+  border-right: 1px solid #F0E4D0;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-logo-icon {
+  width: 96px;
+  height: 96px;
+  background: linear-gradient(135deg, #6DBF6E, #8FD490);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.sidebar-logo:hover .sidebar-logo-icon {
+  transform: rotate(10deg) scale(1.1);
+  box-shadow: 0 4px 12px rgba(109, 191, 110, 0.3);
+}
+
+.sidebar-logo-text {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #4A3C2A;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-user-top {
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  position: relative;
+}
+
+.sidebar-user-top:hover {
+  opacity: 0.85;
+}
+
+.sidebar-user-top .sidebar-logout-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sidebar-user-top-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar-user-top-email {
+  font-size: 0.7rem;
+  color: #B0A08A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 12px;
+  color: #8B7355;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 3px;
+  height: 60%;
+  background: var(--gradient-primary);
+  border-radius: 0 2px 2px 0;
+  transition: transform 0.25s ease;
+}
+
+.sidebar-link:hover {
+  background: #FFF3E0;
+  color: #4A3C2A;
+  transform: translateX(3px);
+}
+
+.sidebar-link:active {
+  transform: translateX(1px) scale(0.98);
+  transition-duration: 0.08s;
+}
+
+.sidebar-link.active {
+  background: #E8F5E9;
+  color: #4A3C2A;
+}
+
+.sidebar-link.active::before {
+  transform: translateY(-50%) scaleY(1);
+}
+
+.sidebar-link-icon {
+  font-size: 0.95rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.sidebar-link.active .sidebar-link-icon {
+  opacity: 1;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: #F0E4D0;
+  margin: 0.25rem -1.25rem;
+}
+
+.sidebar-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar-link-liked .sidebar-link-icon {
+  color: #e8746a;
+}
+
+.sidebar-playlists {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-playlists-header {
+  color: #B0A08A;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+.sidebar-playlists-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  overflow-y: auto;
+}
+
+.sidebar-playlist-link {
+  font-size: 0.825rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.sidebar-playlist-link .sidebar-link-icon {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.sidebar-logout-btn {
+  background: none;
+  border: none;
+  color: #8B7355;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.sidebar-logout-btn:hover {
+  opacity: 1;
+  color: #e8746a;
+  background: rgba(232, 116, 106, 0.1);
+  transform: scale(1.1);
+}
+
+.sidebar-logout-btn:active {
+  transform: scale(0.9);
+  transition-duration: 0.08s;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}

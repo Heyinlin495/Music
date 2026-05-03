@@ -1,0 +1,65 @@
+.playlist-detail { padding: 2rem 2.5rem; max-width: 1200px; }
+.playlist-detail.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; color: #8B7355; }
+.playlist-header { display: flex; gap: 2rem; margin-bottom: 2.5rem; padding: 2rem; background: #FFFAF2; border-radius: 24px; border: 1px solid #F0E4D0; }
+.playlist-cover { width: 200px; height: 200px; border-radius: 18px; overflow: hidden; flex-shrink: 0; position: relative; cursor: pointer; }
+.playlist-cover img { width: 100%; height: 100%; object-fit: cover; }
+.playlist-cover .default-cover { width: 100%; height: 100%; background: linear-gradient(135deg, #6DBF6E, #8FD490); display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.8); font-size: 3.5rem; }
+.cover-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; color: #ffffff; font-size: 0.8rem; opacity: 0; transition: opacity 0.2s ease; border-radius: 18px; }
+.playlist-cover:hover .cover-overlay { opacity: 1; }
+.cover-overlay svg { font-size: 1.5rem; }
+.playlist-info { display: flex; flex-direction: column; justify-content: flex-end; }
+.playlist-type { color: #B0A08A; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
+.playlist-info h1 { color: #4A3C2A; font-size: 2rem; margin: 0.5rem 0; font-weight: 700; }
+.playlist-info .description { color: #8B7355; margin: 0.5rem 0 1rem; max-width: 500px; font-size: 0.95rem; }
+.playlist-meta { display: flex; gap: 0.5rem; color: #B0A08A; margin-bottom: 1.25rem; font-size: 0.9rem; }
+.playlist-actions { display: flex; gap: 0.75rem; }
+.play-all-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.75rem; background: linear-gradient(135deg, #6DBF6E, #8FD490); background-size: 200% 200%; color: #ffffff; border: none; border-radius: 30px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); animation: btnGradient 4s ease infinite; position: relative; overflow: hidden; }
+.play-all-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s ease; }
+.play-all-btn:hover::before { left: 100%; }
+.play-all-btn:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(109, 191, 110, 0.3); transform: scale(1.04) translateY(-2px); }
+.play-all-btn:active:not(:disabled) { transform: scale(0.97); transition-duration: 0.08s; }
+.play-all-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+@keyframes btnGradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.edit-btn, .add-songs-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.875rem 1.25rem; background: #FFF3E0; color: #4A3C2A; border: 1.5px solid #F0E4D0; border-radius: 30px; cursor: pointer; font-weight: 500; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.edit-btn:hover, .add-songs-btn:hover { background: #FFEDCC; border-color: #D4C4A8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(109, 191, 110, 0.08); }
+.edit-btn:active, .add-songs-btn:active { transform: translateY(1px) scale(0.97); transition-duration: 0.08s; }
+.delete-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.875rem 1.25rem; background: rgba(232, 116, 106, 0.08); color: #e8746a; border: 1.5px solid rgba(232, 116, 106, 0.2); border-radius: 30px; cursor: pointer; font-weight: 500; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.delete-btn:hover { background: rgba(232, 116, 106, 0.15); border-color: #e8746a; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(232, 116, 106, 0.1); }
+.delete-btn:active { transform: translateY(1px) scale(0.97); transition-duration: 0.08s; }
+.playlist-songs h2 { color: #4A3C2A; font-size: 1.3rem; margin: 0 0 1.25rem; font-weight: 700; }
+.songs-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.song-item { display: flex; align-items: center; gap: 0.5rem; }
+.song-item .song-card { flex: 1; }
+.remove-song-btn { background: none; border: none; color: #B0A08A; cursor: pointer; padding: 0.5rem; border-radius: 10px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.remove-song-btn:hover { color: #e8746a; background: rgba(232, 116, 106, 0.1); transform: scale(1.15); }
+.remove-song-btn:active { transform: scale(0.9); transition-duration: 0.08s; }
+.empty-message { color: #8B7355; text-align: center; padding: 3rem; background: #FFF3E0; border-radius: 16px; border: 1px dashed #E8D8C0; }
+.cover-upload-group { display: flex; justify-content: center; margin-bottom: 1rem; }
+.cover-upload-preview { width: 140px; height: 140px; border-radius: 14px; overflow: hidden; cursor: pointer; border: 2px dashed #E8D8C0; transition: border-color 0.2s ease; }
+.cover-upload-preview:hover { border-color: #6DBF6E; }
+.cover-upload-preview img { width: 100%; height: 100%; object-fit: cover; }
+.cover-upload-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; color: #B0A08A; font-size: 0.8rem; background: #FFF3E0; }
+.cover-upload-placeholder svg { font-size: 1.5rem; }
+.modal-wide { max-width: 560px; max-height: 80vh; display: flex; flex-direction: column; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.modal-header h3 { margin: 0; }
+.modal-close { background: none; border: none; color: #8B7355; font-size: 1.1rem; cursor: pointer; padding: 0.4rem; border-radius: 8px; transition: all 0.15s ease; }
+.modal-close:hover { color: #4A3C2A; background: #FFF3E0; }
+.add-songs-search { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.875rem; background: #FFF3E0; border: 1px solid #F0E4D0; border-radius: 12px; margin-bottom: 0.75rem; }
+.add-songs-search .search-icon { color: #B0A08A; font-size: 0.8rem; flex-shrink: 0; }
+.add-songs-search input { flex: 1; border: none; outline: none; background: transparent; color: #4A3C2A; font-size: 0.85rem; }
+.add-songs-search input::placeholder { color: #B0A08A; }
+.add-songs-list { overflow-y: auto; flex: 1; max-height: 400px; }
+.add-song-item { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.25rem; border-radius: 10px; transition: background 0.15s ease; }
+.add-song-item:hover { background: #FFF3E0; }
+.add-song-info { display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 0; }
+.add-song-cover { width: 40px; height: 40px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+.add-song-cover img { width: 100%; height: 100%; object-fit: cover; }
+.add-song-cover-default { width: 100%; height: 100%; background: #FFF3E0; display: flex; align-items: center; justify-content: center; color: #B0A08A; font-size: 0.8rem; }
+.add-song-text { flex: 1; min-width: 0; }
+.add-song-title { color: #4A3C2A; font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.add-song-artist { color: #8B7355; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.add-song-btn { display: flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.75rem; background: rgba(109, 191, 110, 0.12); color: #5CAF5D; border: 1px solid rgba(109, 191, 110, 0.25); border-radius: 8px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.15s ease; flex-shrink: 0; }
+.add-song-btn:hover:not(:disabled) { background: rgba(109, 191, 110, 0.2); }
+.add-song-btn.added { background: #FFF3E0; color: #B0A08A; border-color: #F0E4D0; cursor: default; }
+@media (max-width: 768px) { .playlist-detail { padding: 1rem; } .playlist-header { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; } .playlist-cover { width: 160px; height: 160px; } .playlist-info h1 { font-size: 1.5rem; } .playlist-meta { justify-content: center; } .playlist-actions { justify-content: center; flex-wrap: wrap; } }

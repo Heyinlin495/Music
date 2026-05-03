@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod +x *)",
+      "Bash(npm install *)",
+      "Bash(openssl rand *)",
+      "Bash(curl *)",
+      "Bash(./mvnw clean *)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill *)",
+      "Bash(mysql *)",
+      "Bash(./mvnw compile *)",
+      "Bash(tasklist *)",
+      "Bash(node app.js)",
+      "Bash(npx vite *)",
+      "Bash(npm run *)",
+      "Bash(./mvnw test *)",
+      "Bash(./mvnw dependency:build-classpath -q)",
+      "Bash(./mvnw dependency:build-classpath)",
+      "Bash(jar tf *)",
+      "Bash(git -C \"D:/Ajisuangji666/Music\" ls-files)",
+      "Bash(git *)",
+      "Bash(bash *)",
+      "Bash(xxd \"D:/Ajisuangji666/Music/qqyinyue/Alan Walker - Fade - 264 - Fade_qm.qrc\")",
+      "Bash(cat .env)",
+      "Bash(cat .pid_admin .pid_backend .pid_frontend)"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+.search-page { padding: 2rem 2rem; max-width: 1200px; }
+.search-header { margin-bottom: 2rem; overflow: visible; }
+.search-header h1 { color: #4A3C2A; margin: 0 0 1.25rem; font-size: 1.6rem; font-weight: 700; }
+.search-form { display: flex; align-items: center; max-width: 100%; background: #FFF3E0; border: 1px solid #F0E4D0; border-radius: 24px; padding: 0 1rem; transition: all 0.2s ease; }
+.search-form:focus-within { background: #FFFAF2; border-color: #D4C4A8; box-shadow: 0 0 0 3px rgba(109, 191, 110, 0.12); }
+.search-icon { color: #B0A08A; font-size: 0.8rem; margin-right: 0.625rem; flex-shrink: 0; }
+.search-input { flex: 1; border: none; outline: none; background: transparent; padding: 0.75rem 0; font-size: 0.85rem; color: #4A3C2A; width: 100%; box-shadow: none !important; transform: none !important; }
+.search-input:focus { outline: none; box-shadow: none !important; transform: none !important; border-color: transparent !important; }
+.search-input::placeholder { color: #B0A08A; }
+.search-results { margin-top: 2rem; }
+.results-header { margin-bottom: 1rem; }
+.results-header h2 { color: #4A3C2A; font-size: 1.25rem; margin: 0; font-weight: 600; }
+.songs-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.loading { display: flex; flex-direction: column; align-items: center; padding: 3rem; color: #8B7355; }
+.spinner { width: 40px; height: 40px; border: 3px solid #E8D8C0; border-top-color: #6DBF6E; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 0.75rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.no-results { text-align: center; padding: 4rem 2rem; }
+.no-results p { color: #8B7355; font-size: 1rem; margin: 0 0 0.5rem; }
+.no-results span { color: #B0A08A; font-size: 0.85rem; }
+.search-hint { text-align: center; padding: 6rem 2rem; }
+.search-hint .hint-icon { font-size: 3rem; color: #B0A08A; margin-bottom: 1.5rem; opacity: 0.5; }
+.search-hint p { color: #8B7355; font-size: 1rem; margin: 0; }
+.load-more-btn { display: block; width: 200px; margin: 2rem auto 0; padding: 0.875rem; background: transparent; color: #6DBF6E; border: 1.5px solid #6DBF6E; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }
+.load-more-btn:hover:not(:disabled) { background: #6DBF6E; color: #ffffff; }
+.load-more-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+@media (max-width: 768px) { .search-page { padding: 1rem; } }

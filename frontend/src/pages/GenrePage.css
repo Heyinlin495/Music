@@ -1,0 +1,17 @@
+.genre-page { padding: 0 0 2rem; max-width: 1200px; }
+.genre-page.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; color: #8B7355; }
+.genre-header { border-radius: 0 0 24px 24px; padding: 3rem 2rem 2.5rem; margin-bottom: 2rem; }
+.genre-header-content { max-width: 1200px; margin: 0 auto; }
+.genre-header-label { display: inline-block; background: rgba(255, 255, 255, 0.25); color: #ffffff; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; margin-bottom: 0.75rem; backdrop-filter: blur(4px); }
+.genre-header h1 { color: #ffffff; font-size: 2.5rem; margin: 0 0 0.5rem; font-weight: 800; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.genre-header-meta { color: rgba(255, 255, 255, 0.85); font-size: 1rem; margin: 0 0 1.25rem; }
+.play-all-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: #4A3C2A; color: #ffffff; border: none; padding: 0.75rem 2rem; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.play-all-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(74, 60, 42, 0.15); }
+.play-all-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.genre-songs { padding: 0 2rem; }
+.songs-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.empty-message { color: #8B7355; text-align: center; padding: 2rem; background: #FFF3E0; border-radius: 16px; border: 1px dashed #E8D8C0; }
+.load-more-btn { display: block; margin: 1.5rem auto 0; padding: 0.65rem 2.5rem; background: transparent; color: #6DBF6E; border: 1px solid rgba(109, 191, 110, 0.4); border-radius: 24px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; }
+.load-more-btn:hover:not(:disabled) { background: #6DBF6E; color: #ffffff; border-color: #6DBF6E; }
+.load-more-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+@media (max-width: 768px) { .genre-header { padding: 2rem 1.5rem; border-radius: 0 0 18px 18px; } .genre-header h1 { font-size: 1.8rem; } .genre-songs { padding: 0 1rem; } }

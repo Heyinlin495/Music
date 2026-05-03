@@ -1,0 +1,36 @@
+.playlists-page { padding: 2rem 2.5rem; max-width: 1200px; }
+.playlists-page.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; color: #8B7355; }
+.section { margin-bottom: 2.5rem; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.section h2 { color: #4A3C2A; font-size: 1.4rem; margin: 0; font-weight: 700; }
+.create-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.625rem 1.25rem; background: linear-gradient(135deg, #6DBF6E, #8FD490); background-size: 200% 200%; color: #ffffff; border: none; border-radius: 12px; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); animation: btnGradient 4s ease infinite; position: relative; overflow: hidden; }
+.create-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s ease; }
+.create-btn:hover::before { left: 100%; }
+.create-btn:hover { box-shadow: 0 6px 20px rgba(109, 191, 110, 0.3); transform: translateY(-2px); }
+.create-btn:active { transform: translateY(1px) scale(0.97); transition-duration: 0.08s; }
+@keyframes btnGradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.playlists-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.25rem; }
+.empty-message { color: #8B7355; text-align: center; padding: 2.5rem; background: #FFF3E0; border-radius: 16px; border: 1px dashed #E8D8C0; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(74, 60, 42, 0.3); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.modal { background: #FFFAF2; border-radius: 24px; padding: 2rem; width: 100%; max-width: 420px; margin: 1rem; border: 1px solid #F0E4D0; box-shadow: 0 20px 60px rgba(139, 115, 85, 0.12); }
+.modal h3 { color: #4A3C2A; margin: 0 0 1.5rem; font-size: 1.25rem; font-weight: 700; }
+.modal .form-group { margin-bottom: 1.25rem; }
+.modal .form-group label { display: block; color: #6B5A42; margin-bottom: 0.4rem; font-size: 0.875rem; font-weight: 500; }
+.modal .form-group input[type="text"], .modal .form-group textarea { width: 100%; padding: 0.75rem 1rem; background: #FFF3E0; border: 1.5px solid #F0E4D0; border-radius: 12px; color: #4A3C2A; font-size: 0.95rem; resize: vertical; box-sizing: border-box; transition: all 0.2s ease; }
+.modal .form-group input:focus, .modal .form-group textarea:focus { outline: none; border-color: #6DBF6E; background: #FFFAF2; box-shadow: 0 0 0 3px rgba(109, 191, 110, 0.15); }
+.modal .form-group.checkbox { display: flex; align-items: center; gap: 0.5rem; }
+.modal .form-group.checkbox input { width: auto; accent-color: #6DBF6E; }
+.modal .form-group.checkbox label { margin: 0; color: #6B5A42; }
+.modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+.modal-actions .cancel-btn { flex: 1; padding: 0.75rem; background: #FFF3E0; color: #8B7355; border: none; border-radius: 12px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
+.modal-actions .cancel-btn:hover { background: #FFEDCC; }
+.modal-actions .submit-btn { flex: 1; padding: 0.75rem; background: linear-gradient(135deg, #6DBF6E, #8FD490); color: #ffffff; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }
+.modal-actions .submit-btn:hover { box-shadow: 0 4px 12px rgba(109, 191, 110, 0.3); }
+.create-error { background: rgba(232, 116, 106, 0.1); color: #e8746a; padding: 0.6rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.85rem; border: 1px solid rgba(232, 116, 106, 0.2); text-align: center; }
+.cover-upload-group { display: flex; justify-content: center; margin-bottom: 1rem; }
+.cover-upload-preview { width: 140px; height: 140px; border-radius: 14px; overflow: hidden; cursor: pointer; border: 2px dashed #E8D8C0; transition: border-color 0.2s ease; }
+.cover-upload-preview:hover { border-color: #6DBF6E; }
+.cover-upload-preview img { width: 100%; height: 100%; object-fit: cover; }
+.cover-upload-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; color: #B0A08A; font-size: 0.8rem; background: #FFF3E0; }
+.cover-upload-placeholder svg { font-size: 1.5rem; }
+@media (max-width: 768px) { .playlists-page { padding: 1rem; } .section-header { flex-direction: column; gap: 1rem; align-items: flex-start; } .playlists-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; } }
