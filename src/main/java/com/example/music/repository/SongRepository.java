@@ -25,9 +25,21 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     
     @Query("SELECT s FROM Song s ORDER BY s.playCount DESC")
     List<Song> findTopByPlayCount(Pageable pageable);
-    
+
+    @Query(value = "SELECT * FROM songs WHERE MOD(id, 4) = 3 ORDER BY play_count DESC LIMIT :limit", nativeQuery = true)
+    List<Song> findTopSongsPartitioned(@Param("limit") int limit);
+
     @Query("SELECT s FROM Song s ORDER BY s.createdAt DESC")
     List<Song> findLatestSongs(Pageable pageable);
+
+    @Query(value = "SELECT * FROM songs WHERE MOD(id, 4) = 2 ORDER BY created_at DESC LIMIT :limit", nativeQuery = true)
+    List<Song> findLatestSongsPartitioned(@Param("limit") int limit);
+
+    @Query(value = "SELECT * FROM songs WHERE MOD(id, 4) = 0 ORDER BY RAND() LIMIT :limit", nativeQuery = true)
+    List<Song> findDailySongs(@Param("limit") int limit);
+
+    @Query(value = "SELECT * FROM songs WHERE MOD(id, 4) = 1 ORDER BY RAND() LIMIT :limit", nativeQuery = true)
+    List<Song> findRandomSongs(@Param("limit") int limit);
     
     @Query("SELECT DISTINCT s.genre FROM Song s WHERE s.genre IS NOT NULL")
     List<String> findAllGenres();

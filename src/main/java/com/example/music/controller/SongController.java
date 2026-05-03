@@ -61,13 +61,29 @@ public class SongController {
         Long userId = user != null ? user.getId() : null;
         return ResponseEntity.ok(ApiResponse.success(songService.getTopSongs(limit, userId)));
     }
-    
+
     @GetMapping("/latest")
     public ResponseEntity<ApiResponse<List<SongDTO>>> getLatestSongs(
             @RequestParam(defaultValue = "10") int limit,
             @AuthenticationPrincipal UserPrincipal user) {
         Long userId = user != null ? user.getId() : null;
         return ResponseEntity.ok(ApiResponse.success(songService.getLatestSongs(limit, userId)));
+    }
+
+    @GetMapping("/daily")
+    public ResponseEntity<ApiResponse<List<SongDTO>>> getDailySongs(
+            @RequestParam(defaultValue = "10") int limit,
+            @AuthenticationPrincipal UserPrincipal user) {
+        Long userId = user != null ? user.getId() : null;
+        return ResponseEntity.ok(ApiResponse.success(songService.getDailySongs(limit, userId)));
+    }
+
+    @GetMapping("/random")
+    public ResponseEntity<ApiResponse<List<SongDTO>>> getRandomSongs(
+            @RequestParam(defaultValue = "10") int limit,
+            @AuthenticationPrincipal UserPrincipal user) {
+        Long userId = user != null ? user.getId() : null;
+        return ResponseEntity.ok(ApiResponse.success(songService.getRandomSongs(limit, userId)));
     }
     
     @GetMapping("/genres")

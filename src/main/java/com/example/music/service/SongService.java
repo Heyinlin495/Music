@@ -64,7 +64,25 @@ public class SongService {
     
     @Transactional(readOnly = true)
     public List<SongDTO> getTopSongs(int limit, Long currentUserId) {
-        List<Song> songs = songRepository.findTopByPlayCount(PageRequest.of(0, limit));
+        List<Song> songs = songRepository.findTopSongsPartitioned(limit);
+        Set<Long> favoriteIds = loadFavoriteIds(currentUserId);
+        return songs.stream()
+                .map(song -> convertToDTOWithFavorites(song, favoriteIds))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SongDTO> getDailySongs(int limit, Long currentUserId) {
+        List<Song> songs = songRepository.findDailySongs(limit);
+        Set<Long> favoriteIds = loadFavoriteIds(currentUserId);
+        return songs.stream()
+                .map(song -> convertToDTOWithFavorites(song, favoriteIds))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SongDTO> getRandomSongs(int limit, Long currentUserId) {
+        List<Song> songs = songRepository.findRandomSongs(limit);
         Set<Long> favoriteIds = loadFavoriteIds(currentUserId);
         return songs.stream()
                 .map(song -> convertToDTOWithFavorites(song, favoriteIds))
@@ -87,7 +105,7 @@ public class SongService {
 
     @Transactional(readOnly = true)
     public List<SongDTO> getLatestSongs(int limit, Long currentUserId) {
-        List<Song> songs = songRepository.findLatestSongs(PageRequest.of(0, limit));
+        List<Song> songs = songRepository.findLatestSongsPartitioned(limit);
         Set<Long> favoriteIds = loadFavoriteIds(currentUserId);
         return songs.stream()
                 .map(song -> convertToDTOWithFavorites(song, favoriteIds))

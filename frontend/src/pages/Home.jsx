@@ -11,7 +11,8 @@ function Home() {
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [featuredPlaylists, setFeaturedPlaylists] = useState([]);
-  const [recommendedAlbums, setRecommendedAlbums] = useState([]);
+  const [randomSongs, setRandomSongs] = useState([]);
+  const [dailySongs, setDailySongs] = useState([]);
   const [topSongs, setTopSongs] = useState([]);
   const [latestSongs, setLatestSongs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,15 +27,17 @@ function Home() {
 
   const loadData = async () => {
     try {
-      const [featuredRes, albumsRes, topRes, latestRes] = await Promise.all([
+      const [featuredRes, dailyRes, randomRes, topRes, latestRes] = await Promise.all([
         playlistsApi.getFeatured(6).catch(() => ({ data: { data: [] } })),
-        songsApi.getRecommendedAlbums(0, 6).catch(() => ({ data: { data: { content: [] } } })),
+        songsApi.getDaily(10).catch(() => ({ data: { data: [] } })),
+        songsApi.getRandom(10).catch(() => ({ data: { data: [] } })),
         songsApi.getTop(10).catch(() => ({ data: { data: [] } })),
         songsApi.getLatest(10).catch(() => ({ data: { data: [] } })),
       ]);
 
       setFeaturedPlaylists(featuredRes.data.data || []);
-      setRecommendedAlbums(albumsRes.data.data?.content || []);
+      setDailySongs(dailyRes.data.data || []);
+      setRandomSongs(randomRes.data.data || []);
       setTopSongs(topRes.data.data || []);
       setLatestSongs(latestRes.data.data || []);
     } catch (error) {
@@ -137,7 +140,7 @@ function Home() {
 
       {/* Banner Quick Links */}
       <div className="home-banner">
-        {/* 每日推荐 - topSongs */}
+        {/* 每日推荐 - dailySongs */}
         <div
           className={`home-banner-card ${expandedSection === 'daily' ? 'expanded' : ''}`}
           onClick={() => toggleSection('daily')}
@@ -147,14 +150,14 @@ function Home() {
           </div>
           <div className="home-banner-text">
             <div className="home-banner-title">每日推荐</div>
-            <div className="home-banner-desc">热门歌曲精选</div>
+            <div className="home-banner-desc">每日精选好歌</div>
           </div>
           <div className="home-banner-arrow">
             {expandedSection === 'daily' ? <FaChevronUp /> : <FaChevronDown />}
           </div>
         </div>
 
-        {/* 猜你喜欢 - recommendedAlbums */}
+        {/* 猜你喜欢 - randomSongs */}
         <div
           className={`home-banner-card ${expandedSection === 'guess' ? 'expanded' : ''}`}
           onClick={() => toggleSection('guess')}
@@ -164,7 +167,7 @@ function Home() {
           </div>
           <div className="home-banner-text">
             <div className="home-banner-title">猜你喜欢</div>
-            <div className="home-banner-desc">推荐专辑合集</div>
+            <div className="home-banner-desc">发现更多好歌</div>
           </div>
           <div className="home-banner-arrow">
             {expandedSection === 'guess' ? <FaChevronUp /> : <FaChevronDown />}
@@ -207,42 +210,15 @@ function Home() {
       </div>
 
       {/* Expandable Song Lists */}
-      {expandedSection === 'daily' && topSongs.length > 0 && (
+      {expandedSection === 'daily' && dailySongs.length > 0 && (
         <div className="home-banner-expanded">
-          {topSongs.map((song, index) => renderSongItem(song, index, topSongs, 'daily-'))}
+          {dailySongs.map((song, index) => renderSongItem(song, index, dailySongs, 'daily-'))}
         </div>
       )}
 
-      {expandedSection === 'guess' && recommendedAlbums.length > 0 && (
-        <div className="home-banner-expanded home-banner-albums">
-          {recommendedAlbums.map((album, index) => (
-            <div
-              key={`album-${album.album}-${index}`}
-              className="home-album-item"
-              onClick={() => {
-                if (album.album) navigate(`/search?q=${encodeURIComponent(album.album)}`);
-              }}
-            >
-              <div
-                className="home-album-item-cover"
-                style={{
-                  background: album.coverUrl
-                    ? undefined
-                    : coverGradients[index % coverGradients.length],
-                }}
-              >
-                {album.coverUrl ? (
-                  <img src={album.coverUrl} alt={album.album} />
-                ) : (
-                  <div className="home-album-item-icon"><FaMusic /></div>
-                )}
-              </div>
-              <div className="home-album-item-info">
-                <div className="home-album-item-name">{album.album || '未知专辑'}</div>
-                <div className="home-album-item-artist">{album.artist || '未知歌手'}</div>
-              </div>
-            </div>
-          ))}
+      {expandedSection === 'guess' && randomSongs.length > 0 && (
+        <div className="home-banner-expanded">
+          {randomSongs.map((song, index) => renderSongItem(song, index, randomSongs, 'guess-'))}
         </div>
       )}
 

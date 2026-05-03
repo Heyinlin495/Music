@@ -49,6 +49,8 @@ export const songsApi = {
   search: (keyword, page = 0) => api.get(`/songs/search?keyword=${keyword}&page=${page}`),
   getTop: (limit = 10) => api.get(`/songs/top?limit=${limit}`),
   getLatest: (limit = 10) => api.get(`/songs/latest?limit=${limit}`),
+  getDaily: (limit = 10) => api.get(`/songs/daily?limit=${limit}`),
+  getRandom: (limit = 10) => api.get(`/songs/random?limit=${limit}`),
   getGenres: () => api.get('/songs/genres'),
   getGenreSummaries: () => api.get('/songs/genres/summary'),
   getByGenre: (genre, page = 0, size = 20) => api.get(`/songs/genre/${genre}?page=${page}&size=${size}`),
