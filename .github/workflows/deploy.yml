@@ -66,6 +66,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Sync nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: "docker/nginx/nginx.conf"
+          target: ${{ secrets.DEPLOY_PATH }}/docker/nginx/
+          overwrite: true
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -81,6 +91,9 @@ jobs:
 
             # Restart services
             docker compose up -d --remove-orphans backend nginx
+
+            # Reload nginx with updated config
+            docker exec music-nginx nginx -s reload
 
             # Wait for health check
             echo "Waiting for backend to be healthy..."
