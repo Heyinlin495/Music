@@ -62,7 +62,7 @@ function AppLayout() {
 
 function App() {
   return (
-    <Router>
+    <Router basename="/frontend">
       <AppLayout />
     </Router>
   );
