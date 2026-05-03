@@ -1,71 +1,39 @@
-version: '3.8'
+# ============================================================
+# Local Development Environment
+# Usage:
+#   1. cp .env.example .env  (edit values as needed)
+#   2. docker compose up -d
+#   3. Open http://localhost:5173 (frontend) / :5174 (admin)
+# ============================================================
 
 services:
+  # --------------- MySQL ---------------
   mysql:
     image: mysql:8.0
     container_name: music-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root123456}
+      MYSQL_DATABASE: ${DB_NAME:-musicdb}
+      MYSQL_USER: ${DB_USERNAME:-music}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root123456}
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
     ports:
-      - "3306:3306"
+      - "${DB_PORT:-3306}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
-      - music-network
+      - music-net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-root123456}"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  backend:
-    build: .
-    container_name: music-backend
-    environment:
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_NAME: ${DB_NAME}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_USE_SSL: false
-      JWT_SECRET: ${JWT_SECRET}
-      SPRING_PROFILES_ACTIVE: prod
-      QQMUSIC_API_URL: http://qqmusic-api:3300
-      STORAGE_TYPE: minio
-      MINIO_ENDPOINT: http://minio:9000
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
-      MINIO_BUCKET: music
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./uploads:/app/uploads
-      - ./logs:/app/logs
-    depends_on:
-      mysql:
-        condition: service_healthy
-      qqmusic-api:
-        condition: service_started
-    networks:
-      - music-network
+      start_period: 30s
     restart: unless-stopped
 
-  qqmusic-api:
-    build:
-      context: ./docker/qqmusic-api
-    container_name: music-qqmusic-api
-    ports:
-      - "3300:3300"
-    environment:
-      - PORT=3300
-    networks:
-      - music-network
-    restart: unless-stopped
-
+  # --------------- MinIO (local storage) ---------------
   minio:
     image: minio/minio:latest
     container_name: music-minio
@@ -74,18 +42,125 @@ services:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
     volumes:
       - minio-data:/data
     networks:
-      - music-network
+      - music-net
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # --------------- QQ Music API ---------------
+  qqmusic-api:
+    build:
+      context: ./docker/qqmusic-api
+    container_name: music-qqmusic-api
+    ports:
+      - "3300:3300"
+    environment:
+      PORT: 3300
+    networks:
+      - music-net
+    restart: unless-stopped
+
+  # --------------- Spring Boot Backend ---------------
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build-backend
+    container_name: music-backend
+    working_dir: /build
+    command: >
+      ./mvnw spring-boot:run
+      -Dspring-boot.run.profiles=dev
+      -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-musicdb}
+      DB_USERNAME: ${DB_USERNAME:-music}
+      DB_PASSWORD: ${DB_PASSWORD:-root123456}
+      DB_USE_SSL: "false"
+      JWT_SECRET: ${JWT_SECRET:-DevOnlySecretKeyThatIsAtLeast256BitsLongForJWTTokenGeneration12345678}
+      CORS_ALLOWED_ORIGINS: "http://localhost:5173,http://localhost:5174"
+      STORAGE_TYPE: minio
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET: music
+      QQMUSIC_API_URL: http://qqmusic-api:3300
+      SPRING_OUTPUT_ANSI_ENABLED: ALWAYS
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+      - "5005:5005"
+    volumes:
+      - ./src:/build/src:ro
+      - ./pom.xml:/build/pom.xml:ro
+      - ./mvnw:/build/mvnw:ro
+      - maven-cache:/root/.m2/repository  # Persist Maven dependencies across restarts
+      - backend-uploads:/build/uploads
+      - backend-logs:/build/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      qqmusic-api:
+        condition: service_started
+    networks:
+      - music-net
+    restart: unless-stopped
+
+  # --------------- Frontend (Vite dev server) ---------------
+  frontend:
+    image: node:20-alpine
+    container_name: music-frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend-nm:/app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:${BACKEND_PORT:-8080}
+    networks:
+      - music-net
+    restart: unless-stopped
+
+  # --------------- Admin (Vite dev server) ---------------
+  admin:
+    image: node:20-alpine
+    container_name: music-admin
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "${ADMIN_PORT:-5174}:5174"
+    volumes:
+      - ./admin:/app
+      - admin-nm:/app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:${BACKEND_PORT:-8080}
+    networks:
+      - music-net
     restart: unless-stopped
 
 volumes:
   mysql-data:
   minio-data:
+  maven-cache:        # Persists ~/.m2/repository between restarts
+  backend-uploads:
+  backend-logs:
+  frontend-nm:        # Isolates node_modules from host
+  admin-nm:
 
 networks:
-  music-network:
+  music-net:
     driver: bridge

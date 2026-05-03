@@ -1,13 +1,7 @@
-# Maven
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
+# Git
+.git
+.gitignore
+.gitattributes
 
 # IDE
 .idea/
@@ -17,20 +11,37 @@ buildNumber.properties
 .classpath
 .project
 
-# Environment
+# Environment (secrets must not be in image)
 .env
 .env.local
+.env.*.local
 
-# Uploads
+# Uploads & logs
 uploads/
-
-# Logs
 logs/
 *.log
+.pids
+.pid_*
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Node
+# Node modules (rebuilt in Docker)
 node_modules/
+frontend/node_modules/
+admin/node_modules/
+
+# Docker itself
+Dockerfile
+docker-compose.yml
+docker-compose*.yml
+.dockerignore
+
+# Docs & misc
+README.md
+LICENSE
+*.md
+.claude/
+start.bat
+stop.bat

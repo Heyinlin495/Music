@@ -55,6 +55,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/files/**").permitAll()
+                .requestMatchers("/api/health/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/songs/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/playlists/**").permitAll()
@@ -62,6 +63,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/songs/*/play").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/music/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // Static resources & SPA routes
+                .requestMatchers("/", "/frontend/**", "/admin/**").permitAll()
+                .requestMatchers("/*.html", "/*.js", "/*.css", "/*.ico", "/*.svg", "/*.png", "/*.jpg", "/*.webp", "/*.woff", "/*.woff2", "/*.ttf").permitAll()
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
