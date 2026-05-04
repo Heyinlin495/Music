@@ -3,12 +3,11 @@ package com.example.music.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -44,7 +43,9 @@ public class FileController {
     }
 
     @GetMapping("/music/{filename}")
-    public ResponseEntity<Resource> getMusicFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> getMusicFile(
+            @PathVariable String filename,
+            @RequestHeader(value = "Range", required = false) String rangeHeader) {
         if (!isValidFilename(filename)) {
             return ResponseEntity.badRequest().build();
         }
@@ -53,22 +54,55 @@ public class FileController {
             Path uploadDir = Paths.get(musicUploadPath).toAbsolutePath().normalize();
             Path filePath = uploadDir.resolve(filename).normalize();
 
-            if (!filePath.startsWith(uploadDir)) {
-                return ResponseEntity.badRequest().build();
-            }
-
-            Resource resource = new UrlResource(filePath.toUri());
-
-            if (resource.exists()) {
-                String contentType = getAudioContentType(filename);
-                return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType(contentType))
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                        .body(resource);
-            } else {
+            if (!filePath.startsWith(uploadDir) || !Files.exists(filePath)) {
                 return ResponseEntity.notFound().build();
             }
-        } catch (MalformedURLException e) {
+
+            long fileSize = Files.size(filePath);
+            String contentType = getAudioContentType(filename);
+
+            // Support Range requests for seeking
+            if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
+                String rangeValue = rangeHeader.substring(6);
+                String[] parts = rangeValue.split("-");
+                long start = Long.parseLong(parts[0]);
+                long end = parts.length > 1 && !parts[1].isEmpty()
+                        ? Long.parseLong(parts[1]) : fileSize - 1;
+                end = Math.min(end, fileSize - 1);
+                long contentLength = end - start + 1;
+
+                byte[] buffer = new byte[(int) contentLength];
+                try (InputStream is = Files.newInputStream(filePath)) {
+                    is.skipNBytes(start);
+                    int bytesRead = 0;
+                    while (bytesRead < contentLength) {
+                        int read = is.read(buffer, bytesRead, (int) (contentLength - bytesRead));
+                        if (read == -1) break;
+                        bytesRead += read;
+                    }
+                }
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.parseMediaType(contentType));
+                headers.set(HttpHeaders.ACCEPT_RANGES, "bytes");
+                headers.setContentLength(contentLength);
+                headers.set(HttpHeaders.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileSize);
+                headers.set(HttpHeaders.CACHE_CONTROL, "public, max-age=3600");
+
+                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                        .headers(headers)
+                        .body(new org.springframework.core.io.ByteArrayResource(buffer));
+            }
+
+            // Full file response
+            Resource resource = new UrlResource(filePath.toUri());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.ACCEPT_RANGES, "bytes")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                    .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
+                    .body(resource);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -115,7 +149,7 @@ public class FileController {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -151,7 +185,7 @@ public class FileController {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }

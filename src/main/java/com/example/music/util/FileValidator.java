@@ -10,7 +10,8 @@ import java.util.Set;
 public class FileValidator {
 
     private static final Set<String> ALLOWED_AUDIO_TYPES = Set.of(
-        "audio/mpeg", "audio/mp3", "audio/wav", "audio/flac", "audio/x-m4a"
+        "audio/mpeg", "audio/mp3", "audio/wav", "audio/flac",
+        "audio/x-m4a", "audio/mp4", "audio/m4a", "audio/aac", "audio/ogg"
     );
 
     private static final Set<String> ALLOWED_IMAGE_TYPES = Set.of(

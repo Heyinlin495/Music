@@ -128,7 +128,7 @@ public class MusicStreamController {
             fullStream.close();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType("audio/mpeg"));
+            headers.setContentType(MediaType.parseMediaType(getAudioContentType(objectName)));
             headers.set(HttpHeaders.ACCEPT_RANGES, "bytes");
             headers.setContentLength(contentLength);
             headers.set(HttpHeaders.CACHE_CONTROL, "public, max-age=3600");
@@ -149,6 +149,24 @@ public class MusicStreamController {
             log.error("Error streaming local song {}: {}", songId, e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "音频流读取失败");
         }
+    }
+
+    private static final Map<String, String> AUDIO_MIME_TYPES = Map.of(
+        "mp3", "audio/mpeg",
+        "wav", "audio/wav",
+        "flac", "audio/flac",
+        "m4a", "audio/mp4",
+        "aac", "audio/aac",
+        "ogg", "audio/ogg"
+    );
+
+    private String getAudioContentType(String filename) {
+        int dotIndex = filename.lastIndexOf('.');
+        if (dotIndex >= 0) {
+            String ext = filename.substring(dotIndex + 1).toLowerCase();
+            return AUDIO_MIME_TYPES.getOrDefault(ext, "application/octet-stream");
+        }
+        return "application/octet-stream";
     }
 
     @GetMapping("/lyrics/{songId}")
