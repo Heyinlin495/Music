@@ -9,14 +9,12 @@ WORKDIR /build
 
 # Copy only dependency descriptors first → cache layer
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw mvnw.cmd ./
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
 # Copy source and build
 COPY src ./src
-RUN ./mvnw clean package -DskipTests -B \
-    && mv target/*.jar app.jar
+RUN mvn clean package -DskipTests -B \
+    && java -Djarmode=layertools -jar target/*.jar extract --destination /build/extracted
 
 # --- Stage 2: Build frontend & admin (Node + Vite) ---
 FROM node:20-alpine AS build-frontend
@@ -40,8 +38,8 @@ FROM eclipse-temurin:21-jre-alpine
 LABEL maintainer="Heyinlin495"
 LABEL description="Music Application - Spring Boot + React"
 
-# Install wget for healthcheck, then clean up
-RUN apk add --no-cache wget \
+# Install tini (proper PID 1 signal handling) and wget (healthcheck)
+RUN apk add --no-cache --no-install-recommends tini wget \
     && rm -rf /var/cache/apk/*
 
 # Create non-root user
@@ -49,16 +47,19 @@ RUN addgroup -S app && adduser -S app -G app
 
 WORKDIR /app
 
-# Copy backend JAR
-COPY --from=build-backend /build/app.jar app.jar
+# Copy Spring Boot layered JAR (each layer cached independently)
+# Order by change frequency: dependencies (rare) → loader → snapshots → application (frequent)
+COPY --from=build-backend --chown=app:app /build/extracted/dependencies/ ./
+COPY --from=build-backend --chown=app:app /build/extracted/spring-boot-loader/ ./
+COPY --from=build-backend --chown=app:app /build/extracted/snapshot-dependencies/ ./
+COPY --from=build-backend --chown=app:app /build/extracted/application/ ./
 
 # Copy frontend static files (served by Spring Boot or reverse proxy)
-COPY --from=build-frontend /build/frontend/dist ./static/frontend
-COPY --from=build-frontend /build/admin/dist     ./static/admin
+COPY --from=build-frontend --chown=app:app /build/frontend/dist ./static/frontend
+COPY --from=build-frontend --chown=app:app /build/admin/dist     ./static/admin
 
-# Create upload/log directories with proper ownership
-RUN mkdir -p uploads/music uploads/covers uploads/avatars logs \
-    && chown -R app:app /app
+# Create upload/log directories
+RUN mkdir -p uploads/music uploads/covers uploads/avatars logs
 
 USER app
 
@@ -67,9 +68,10 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:8080/api/health || exit 1
 
-ENTRYPOINT ["java", \
+ENTRYPOINT ["/sbin/tini", "--", "java", \
   "-XX:+UseContainerSupport", \
   "-XX:MaxRAMPercentage=75.0", \
   "-XX:InitialRAMPercentage=50.0", \
   "-Djava.security.egd=file:/dev/./urandom", \
-  "-jar", "app.jar"]
+  "-cp", ".", \
+  "org.springframework.boot.loader.launch.JarLauncher"]
