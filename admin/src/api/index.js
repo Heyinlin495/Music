@@ -65,7 +65,14 @@ export const adminApi = {
     removeSongFromPlaylist: (playlistId, songId) => api.delete(`/admin/playlists/${playlistId}/songs/${songId}`),
 
     // Import local music
-    importLocalMusic: (directory = '/host') => api.post(`/admin/music/import?directory=${encodeURIComponent(directory)}`)
+    importLocalMusic: (directory = '/host') => api.post(`/admin/music/import?directory=${encodeURIComponent(directory)}`),
+
+    // Batch upload local music files from browser
+    batchUploadMusic: (formData, onUploadProgress) => api.post('/admin/music/batch-upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress,
+        timeout: 600000
+    })
 };
 
 export default api;

@@ -27,7 +27,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -309,5 +311,56 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
+    }
+
+    // Batch upload local music files from browser
+    @PostMapping("/music/batch-upload")
+    public ResponseEntity<?> batchUploadMusic(
+            @CurrentUser UserPrincipal currentUser,
+            @RequestParam("files") MultipartFile[] files) {
+
+        int imported = 0;
+        int skipped = 0;
+        List<String> errors = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            try {
+                String filename = file.getOriginalFilename();
+                if (filename == null || filename.isBlank()) {
+                    errors.add("跳过空文件名");
+                    continue;
+                }
+
+                // Parse artist and title from filename
+                String nameWithoutExt = filename.contains(".")
+                        ? filename.substring(0, filename.lastIndexOf('.'))
+                        : filename;
+                String artist;
+                String title;
+                if (nameWithoutExt.contains(" - ")) {
+                    String[] parts = nameWithoutExt.split(" - ", 2);
+                    artist = parts[0].trim();
+                    title = parts[1].trim();
+                } else {
+                    artist = "未知歌手";
+                    title = nameWithoutExt.trim();
+                }
+
+                songService.uploadSong(file, null, title, artist, "", "其他", 0, null, currentUser.getId());
+                imported++;
+            } catch (Exception e) {
+                if (e.getMessage() != null && e.getMessage().contains("歌曲已存在")) {
+                    skipped++;
+                } else {
+                    errors.add(file.getOriginalFilename() + ": " + e.getMessage());
+                }
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("imported", imported);
+        result.put("skipped", skipped);
+        result.put("errors", errors);
+        return ResponseEntity.ok(result);
     }
 }

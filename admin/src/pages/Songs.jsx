@@ -19,7 +19,9 @@ function Songs() {
     const [coverFile, setCoverFile] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [importing, setImporting] = useState(false);
+    const [importProgress, setImportProgress] = useState('');
     const fileInputRef = useRef();
+    const importInputRef = useRef();
 
     useEffect(() => {
         loadSongs();
@@ -44,23 +46,38 @@ function Songs() {
         loadSongs();
     };
 
-    const handleImport = async () => {
-        const directory = prompt('请输入服务器上的音乐目录路径（用 /host 前缀访问服务器文件，如 /host/home/user/music）:', '/host/');
-        if (!directory) return;
-        if (!confirm(`确定要导入 ${directory} 目录下的本地音乐文件吗？`)) return;
+    const handleImport = () => {
+        importInputRef.current?.click();
+    };
+
+    const handleImportFiles = async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        if (!confirm(`确定要导入 ${files.length} 个音乐文件吗？`)) return;
+
         setImporting(true);
+        setImportProgress(`准备上传 ${files.length} 个文件...`);
+
+        const formData = new FormData();
+        files.forEach(f => formData.append('files', f));
+
         try {
-            const response = await adminApi.importLocalMusic(directory);
+            const response = await adminApi.batchUploadMusic(formData, (progressEvent) => {
+                const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                setImportProgress(`上传中... ${percent}%`);
+            });
             const { imported, skipped, errors } = response.data;
             let msg = `导入完成！成功导入 ${imported} 首歌曲`;
             if (skipped > 0) msg += `，跳过 ${skipped} 首（已存在）`;
-            if (errors && errors.length > 0) msg += `\n错误: ${errors.join(', ')}`;
+            if (errors && errors.length > 0) msg += `\n错误:\n${errors.join('\n')}`;
             alert(msg);
             loadSongs();
         } catch (error) {
             alert(error.response?.data?.error || '导入失败');
         } finally {
             setImporting(false);
+            setImportProgress('');
+            e.target.value = '';
         }
     };
 
@@ -135,8 +152,16 @@ function Songs() {
                 <h1>歌曲管理</h1>
                 <div style={{ display: 'flex', gap: '10px' }}>
                     <button className="btn-primary" onClick={handleImport} disabled={importing}>
-                        <FiDownload /> {importing ? '导入中...' : '导入本地音乐'}
+                        <FiDownload /> {importing ? (importProgress || '导入中...') : '导入本地音乐'}
                     </button>
+                    <input
+                        ref={importInputRef}
+                        type="file"
+                        accept="audio/*"
+                        multiple
+                        onChange={handleImportFiles}
+                        style={{ display: 'none' }}
+                    />
                     <button className="btn-primary" onClick={() => setShowUploadModal(true)}>
                         <FiUpload /> 上传歌曲
                     </button>
