@@ -52,3 +52,10 @@ logs/
 node_modules/
 frontend/node_modules/
 admin/node_modules/
+
+### Claude ###
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
+### Build ###
+admin/dist/
