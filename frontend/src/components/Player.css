@@ -197,9 +197,9 @@
 
 .progress-bar {
   width: 100%;
-  height: 6px;
+  height: 4px;
   background: #E8D8C0;
-  border-radius: 3px;
+  border-radius: 2px;
   position: relative;
   cursor: pointer;
   padding: 8px 0;
@@ -209,7 +209,7 @@
 .progress-fill {
   height: 100%;
   background: #6DBF6E;
-  border-radius: 3px;
+  border-radius: 2px;
   transition: width 0.1s linear;
 }
 
@@ -218,7 +218,7 @@
 }
 
 .progress-bar:hover {
-  height: 8px;
+  height: 5px;
 }
 
 .player-volume {
@@ -345,5 +345,19 @@
 
   .progress-container {
     max-width: 100%;
+  }
+
+  .progress-bar {
+    height: 4px;
+    padding: 6px 0;
+    border-radius: 2px;
+  }
+
+  .progress-fill {
+    border-radius: 2px;
+  }
+
+  .progress-bar:hover {
+    height: 4px;
   }
 }
