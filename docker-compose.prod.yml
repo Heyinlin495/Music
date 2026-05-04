@@ -41,6 +41,7 @@ services:
     volumes:
       - backend-uploads:/app/uploads
       - backend-logs:/app/logs
+      - /mnt/music:/music:ro
     depends_on:
       mysql:
         condition: service_healthy

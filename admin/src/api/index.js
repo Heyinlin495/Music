@@ -65,7 +65,7 @@ export const adminApi = {
     removeSongFromPlaylist: (playlistId, songId) => api.delete(`/admin/playlists/${playlistId}/songs/${songId}`),
 
     // Import local music
-    importLocalMusic: (directory = './qqyinyue') => api.post(`/admin/music/import?directory=${encodeURIComponent(directory)}`)
+    importLocalMusic: (directory = '/music') => api.post(`/admin/music/import?directory=${encodeURIComponent(directory)}`)
 };
 
 export default api;

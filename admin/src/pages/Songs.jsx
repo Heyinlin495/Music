@@ -45,7 +45,7 @@ function Songs() {
     };
 
     const handleImport = async () => {
-        const directory = prompt('请输入本地音乐目录路径:', './qqyinyue');
+        const directory = prompt('请输入服务器上的音乐目录路径:', '/music');
         if (!directory) return;
         if (!confirm(`确定要导入 ${directory} 目录下的本地音乐文件吗？`)) return;
         setImporting(true);

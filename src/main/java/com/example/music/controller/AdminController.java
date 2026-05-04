@@ -302,7 +302,7 @@ public class AdminController {
 
     // Import local music files
     @PostMapping("/music/import")
-    public ResponseEntity<?> importLocalMusic(@RequestParam(defaultValue = "./qqyinyue") String directory) {
+    public ResponseEntity<?> importLocalMusic(@RequestParam(defaultValue = "/music") String directory) {
         try {
             Map<String, Object> result = adminService.importLocalMusic(directory);
             return ResponseEntity.ok(result);
