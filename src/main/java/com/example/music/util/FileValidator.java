@@ -17,7 +17,7 @@ public class FileValidator {
         "image/jpeg", "image/png", "image/webp"
     );
 
-    private static final long MAX_AUDIO_SIZE = 50 * 1024 * 1024; // 50MB
+    private static final long MAX_AUDIO_SIZE = 200 * 1024 * 1024; // 200MB
     private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024;  // 5MB
 
     public static void validateAudioFile(MultipartFile file) {
@@ -26,7 +26,7 @@ public class FileValidator {
         }
 
         if (file.getSize() > MAX_AUDIO_SIZE) {
-            throw new InvalidFileTypeException("Audio file size exceeds 50MB limit");
+            throw new InvalidFileTypeException("Audio file size exceeds 200MB limit");
         }
 
         String contentType = file.getContentType();
