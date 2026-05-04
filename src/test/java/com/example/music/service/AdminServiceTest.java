@@ -240,7 +240,7 @@ class AdminServiceTest {
         when(songRepository.findById(1L)).thenReturn(Optional.of(testSong));
         when(songRepository.save(any(Song.class))).thenReturn(testSong);
 
-        Song result = adminService.updateSong(1L, "New Title", "New Artist", "New Album", "Rock");
+        SongDTO result = adminService.updateSong(1L, "New Title", "New Artist", "New Album", "Rock");
 
         assertNotNull(result);
         verify(songRepository).save(any(Song.class));
@@ -251,7 +251,7 @@ class AdminServiceTest {
         when(songRepository.findById(1L)).thenReturn(Optional.of(testSong));
         when(songRepository.save(any(Song.class))).thenReturn(testSong);
 
-        Song result = adminService.updateSong(1L, null, null, null, null);
+        SongDTO result = adminService.updateSong(1L, null, null, null, null);
 
         assertNotNull(result);
     }

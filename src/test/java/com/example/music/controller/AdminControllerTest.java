@@ -1,5 +1,6 @@
 package com.example.music.controller;
 
+import com.example.music.dto.SongDTO;
 import com.example.music.entity.Role;
 import com.example.music.entity.Song;
 import com.example.music.entity.User;
@@ -92,7 +93,7 @@ class AdminControllerTest {
 
     @Test
     void updateSong_Success() throws Exception {
-        Song song = Song.builder().id(1L).title("Updated").artist("New Artist").build();
+        SongDTO song = SongDTO.builder().id(1L).title("Updated").artist("New Artist").build();
         when(adminService.updateSong(1L, "Updated", "New Artist", null, null)).thenReturn(song);
 
         mockMvc.perform(put("/api/admin/songs/1")

@@ -148,11 +148,11 @@ public class AdminController {
     }
     
     @PutMapping("/songs/{id}")
-    public ResponseEntity<Song> updateSong(
+    public ResponseEntity<SongDTO> updateSong(
             @PathVariable Long id,
             @RequestBody Map<String, String> request) {
-        
-        Song song = adminService.updateSong(
+
+        SongDTO song = adminService.updateSong(
                 id,
                 request.get("title"),
                 request.get("artist"),

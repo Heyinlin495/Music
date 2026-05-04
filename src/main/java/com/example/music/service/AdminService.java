@@ -161,7 +161,7 @@ public class AdminService {
     }
     
     @Transactional
-    public Song updateSong(Long songId, String title, String artist, String album, String genre) {
+    public SongDTO updateSong(Long songId, String title, String artist, String album, String genre) {
         Song song = songRepository.findById(songId)
                 .orElseThrow(() -> new RuntimeException("Song not found"));
 
@@ -170,7 +170,7 @@ public class AdminService {
         if (album != null) song.setAlbum(album);
         if (genre != null) song.setGenre(genre);
 
-        return songRepository.save(song);
+        return convertSongToDTO(songRepository.save(song));
     }
 
     // Playlist Management

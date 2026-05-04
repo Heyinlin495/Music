@@ -45,10 +45,12 @@ function Songs() {
     };
 
     const handleImport = async () => {
-        if (!confirm('确定要导入 qqyinyue 目录下的本地音乐文件吗？')) return;
+        const directory = prompt('请输入本地音乐目录路径:', './qqyinyue');
+        if (!directory) return;
+        if (!confirm(`确定要导入 ${directory} 目录下的本地音乐文件吗？`)) return;
         setImporting(true);
         try {
-            const response = await adminApi.importLocalMusic();
+            const response = await adminApi.importLocalMusic(directory);
             const { imported, skipped, errors } = response.data;
             let msg = `导入完成！成功导入 ${imported} 首歌曲`;
             if (skipped > 0) msg += `，跳过 ${skipped} 首（已存在）`;
@@ -89,7 +91,7 @@ function Songs() {
             setCoverFile(null);
             loadSongs();
         } catch (error) {
-            alert(error.response?.data?.message || '上传歌曲失败');
+            alert(error.response?.data?.error || error.response?.data?.message || '上传歌曲失败');
         } finally {
             setUploading(false);
         }
@@ -107,7 +109,7 @@ function Songs() {
             setShowEditModal(false);
             loadSongs();
         } catch (error) {
-            alert('更新歌曲失败');
+            alert(error.response?.data?.message || error.response?.data?.error || '更新歌曲失败');
         }
     };
 
