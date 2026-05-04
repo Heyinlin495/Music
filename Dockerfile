@@ -39,8 +39,7 @@ LABEL maintainer="Heyinlin495"
 LABEL description="Music Application - Spring Boot + React"
 
 # Install tini (proper PID 1 signal handling) and wget (healthcheck)
-RUN apk add --no-cache --no-install-recommends tini wget \
-    && rm -rf /var/cache/apk/*
+RUN apk add --no-cache tini wget
 
 # Create non-root user
 RUN addgroup -S app && adduser -S app -G app
