@@ -243,6 +243,10 @@ function Player() {
                   className="progress-fill"
                   style={{ width: `${progressPercent}%` }}
                 />
+                <div
+                  className="progress-dot"
+                  style={{ left: `${progressPercent}%` }}
+                />
               </div>
             </div>
             <span className="time">{formatTime(totalDuration)}</span>
