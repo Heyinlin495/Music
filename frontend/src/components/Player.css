@@ -197,27 +197,19 @@
 
 .progress-bar {
   width: 100%;
-  height: 3px;
+  height: 6px;
   background: #E8D8C0;
-  border-radius: 2px;
+  border-radius: 3px;
   position: relative;
-  overflow: visible;
   cursor: pointer;
-}
-
-.progress-bar::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  bottom: -10px;
-  left: 0;
-  right: 0;
+  padding: 8px 0;
+  background-clip: content-box;
 }
 
 .progress-fill {
   height: 100%;
   background: #6DBF6E;
-  border-radius: 2px;
+  border-radius: 3px;
   transition: width 0.1s linear;
 }
 
@@ -226,7 +218,7 @@
 }
 
 .progress-bar:hover {
-  height: 4px;
+  height: 8px;
 }
 
 .player-volume {
