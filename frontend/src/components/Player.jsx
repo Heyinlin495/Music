@@ -254,7 +254,7 @@ function Player() {
         )}
       </div>
 
-      <div className="player-volume">
+      <div className="player-actions">
         {isAuthenticated && (
           <button
             className={`favorite-btn ${isFavorite ? 'active' : ''}`}
@@ -271,16 +271,18 @@ function Player() {
         >
           <FaAlignLeft />
         </button>
-        {volume === 0 ? <FaVolumeMute /> : <FaVolumeUp />}
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="volume-slider"
-        />
+        <div className="player-volume">
+          {volume === 0 ? <FaVolumeMute /> : <FaVolumeUp />}
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="volume-slider"
+          />
+        </div>
       </div>
 
       {showLyrics && <LyricsPanel onClose={() => setShowLyrics(false)} />}

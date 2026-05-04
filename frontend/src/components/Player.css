@@ -238,13 +238,19 @@
   height: 5px;
 }
 
-.player-volume {
+.player-actions {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   width: 25%;
   justify-content: flex-end;
   color: #8B7355;
+}
+
+.player-volume {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .lyrics-toggle-btn {
@@ -350,6 +356,10 @@
 
   .player-volume {
     display: none;
+  }
+
+  .player-actions {
+    width: auto;
   }
 
   .player-controls {
