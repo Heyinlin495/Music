@@ -54,8 +54,8 @@ function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1>登录</h1>
-        <p className="auth-subtitle">欢迎回来！请登录您的账户</p>
+        <h1>欢迎回来Heyinlin!</h1>
+        <p className="auth-subtitle">请登录</p>
 
         {error && (
           <div className="error-message" onClick={clearError}>
