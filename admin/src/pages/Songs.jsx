@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiSearch, FiUpload, FiEdit2, FiTrash2, FiMusic, FiDownload } from 'react-icons/fi';
+import { FiSearch, FiEdit2, FiTrash2, FiMusic, FiDownload } from 'react-icons/fi';
 import { adminApi } from '../api';
 import './Songs.css';
 
@@ -9,18 +9,10 @@ function Songs() {
     const [totalPages, setTotalPages] = useState(0);
     const [keyword, setKeyword] = useState('');
     const [loading, setLoading] = useState(true);
-    const [showUploadModal, setShowUploadModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editSong, setEditSong] = useState(null);
-    const [uploadData, setUploadData] = useState({
-        title: '', artist: '', album: '', genre: '', duration: 0
-    });
-    const [uploadFile, setUploadFile] = useState(null);
-    const [coverFile, setCoverFile] = useState(null);
-    const [uploading, setUploading] = useState(false);
     const [importing, setImporting] = useState(false);
     const [importProgress, setImportProgress] = useState('');
-    const fileInputRef = useRef();
     const importInputRef = useRef();
 
     useEffect(() => {
@@ -81,39 +73,6 @@ function Songs() {
         }
     };
 
-    const handleUpload = async (e) => {
-        e.preventDefault();
-        if (!uploadFile) {
-            alert('请选择音乐文件');
-            return;
-        }
-
-        setUploading(true);
-        const formData = new FormData();
-        formData.append('file', uploadFile);
-        formData.append('title', uploadData.title);
-        formData.append('artist', uploadData.artist);
-        formData.append('album', uploadData.album || '');
-        formData.append('genre', uploadData.genre || '');
-        formData.append('duration', uploadData.duration || 0);
-        if (coverFile) {
-            formData.append('cover', coverFile);
-        }
-
-        try {
-            await adminApi.uploadSong(formData);
-            setShowUploadModal(false);
-            setUploadData({ title: '', artist: '', album: '', genre: '', duration: 0 });
-            setUploadFile(null);
-            setCoverFile(null);
-            loadSongs();
-        } catch (error) {
-            alert(error.response?.data?.error || error.response?.data?.message || '上传歌曲失败');
-        } finally {
-            setUploading(false);
-        }
-    };
-
     const handleEdit = async (e) => {
         e.preventDefault();
         try {
@@ -162,9 +121,6 @@ function Songs() {
                         onChange={handleImportFiles}
                         style={{ display: 'none' }}
                     />
-                    <button className="btn-primary" onClick={() => setShowUploadModal(true)}>
-                        <FiUpload /> 上传歌曲
-                    </button>
                 </div>
             </div>
 
@@ -212,14 +168,14 @@ function Songs() {
                                     <td>{(song.playCount || 0).toLocaleString()}</td>
                                     <td>
                                         <div className="action-buttons">
-                                            <button 
-                                                className="action-btn edit" 
+                                            <button
+                                                className="action-btn edit"
                                                 onClick={() => { setEditSong(song); setShowEditModal(true); }}
                                             >
                                                 <FiEdit2 />
                                             </button>
-                                            <button 
-                                                className="action-btn delete" 
+                                            <button
+                                                className="action-btn delete"
                                                 onClick={() => handleDelete(song.id)}
                                             >
                                                 <FiTrash2 />
@@ -238,65 +194,6 @@ function Songs() {
                 <span>第 {page + 1} 页 / 共 {totalPages || 1} 页</span>
                 <button disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)}>下一页</button>
             </div>
-
-            {showUploadModal && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h2>上传新歌曲</h2>
-                        <form onSubmit={handleUpload}>
-                            <div className="file-upload" onClick={() => fileInputRef.current?.click()}>
-                                <FiUpload size={32} />
-                                <span>{uploadFile ? uploadFile.name : '点击选择音乐文件'}</span>
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="audio/*"
-                                    onChange={(e) => setUploadFile(e.target.files[0])}
-                                    style={{ display: 'none' }}
-                                />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="歌曲名 *"
-                                value={uploadData.title}
-                                onChange={(e) => setUploadData({ ...uploadData, title: e.target.value })}
-                                required
-                            />
-                            <input
-                                type="text"
-                                placeholder="歌手 *"
-                                value={uploadData.artist}
-                                onChange={(e) => setUploadData({ ...uploadData, artist: e.target.value })}
-                                required
-                            />
-                            <input
-                                type="text"
-                                placeholder="专辑"
-                                value={uploadData.album}
-                                onChange={(e) => setUploadData({ ...uploadData, album: e.target.value })}
-                            />
-                            <input
-                                type="text"
-                                placeholder="流派"
-                                value={uploadData.genre}
-                                onChange={(e) => setUploadData({ ...uploadData, genre: e.target.value })}
-                            />
-                            <input
-                                type="number"
-                                placeholder="时长（秒）"
-                                value={uploadData.duration}
-                                onChange={(e) => setUploadData({ ...uploadData, duration: parseInt(e.target.value) || 0 })}
-                            />
-                            <div className="modal-actions">
-                                <button type="button" onClick={() => setShowUploadModal(false)}>取消</button>
-                                <button type="submit" className="btn-primary" disabled={uploading}>
-                                    {uploading ? '上传中...' : '上传'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
 
             {showEditModal && editSong && (
                 <div className="modal-overlay">

@@ -45,9 +45,6 @@ export const adminApi = {
     // Songs
     getSongs: (page = 0, size = 10, keyword = '') =>
         api.get('/admin/songs', { params: { page, size, keyword: keyword || undefined } }),
-    uploadSong: (formData) => api.post('/admin/songs/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    }),
     updateSong: (id, data) => api.put(`/admin/songs/${id}`, data),
     deleteSong: (id) => api.delete(`/admin/songs/${id}`),
 
