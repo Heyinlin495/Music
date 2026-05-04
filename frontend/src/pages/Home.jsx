@@ -141,98 +141,101 @@ function Home() {
       {/* Banner Quick Links */}
       <div className="home-banner">
         {/* 每日推荐 - dailySongs */}
-        <div
-          className={`home-banner-card ${expandedSection === 'daily' ? 'expanded' : ''}`}
-          onClick={() => toggleSection('daily')}
-        >
-          <div className="home-banner-icon">
-            <FaCalendarAlt />
+        <div className="home-banner-group">
+          <div
+            className={`home-banner-card ${expandedSection === 'daily' ? 'expanded' : ''}`}
+            onClick={() => toggleSection('daily')}
+          >
+            <div className="home-banner-icon">
+              <FaCalendarAlt />
+            </div>
+            <div className="home-banner-text">
+              <div className="home-banner-title">每日推荐</div>
+              <div className="home-banner-desc">每日精选好歌</div>
+            </div>
+            <div className="home-banner-arrow">
+              {expandedSection === 'daily' ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
           </div>
-          <div className="home-banner-text">
-            <div className="home-banner-title">每日推荐</div>
-            <div className="home-banner-desc">每日精选好歌</div>
-          </div>
-          <div className="home-banner-arrow">
-            {expandedSection === 'daily' ? <FaChevronUp /> : <FaChevronDown />}
-          </div>
+          {expandedSection === 'daily' && dailySongs.length > 0 && (
+            <div className="home-banner-expanded">
+              {dailySongs.map((song, index) => renderSongItem(song, index, dailySongs, 'daily-'))}
+            </div>
+          )}
         </div>
 
         {/* 猜你喜欢 - randomSongs */}
-        <div
-          className={`home-banner-card ${expandedSection === 'guess' ? 'expanded' : ''}`}
-          onClick={() => toggleSection('guess')}
-        >
-          <div className="home-banner-icon">
-            <FaHeart />
+        <div className="home-banner-group">
+          <div
+            className={`home-banner-card ${expandedSection === 'guess' ? 'expanded' : ''}`}
+            onClick={() => toggleSection('guess')}
+          >
+            <div className="home-banner-icon">
+              <FaHeart />
+            </div>
+            <div className="home-banner-text">
+              <div className="home-banner-title">猜你喜欢</div>
+              <div className="home-banner-desc">发现更多好歌</div>
+            </div>
+            <div className="home-banner-arrow">
+              {expandedSection === 'guess' ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
           </div>
-          <div className="home-banner-text">
-            <div className="home-banner-title">猜你喜欢</div>
-            <div className="home-banner-desc">发现更多好歌</div>
-          </div>
-          <div className="home-banner-arrow">
-            {expandedSection === 'guess' ? <FaChevronUp /> : <FaChevronDown />}
-          </div>
+          {expandedSection === 'guess' && randomSongs.length > 0 && (
+            <div className="home-banner-expanded">
+              {randomSongs.map((song, index) => renderSongItem(song, index, randomSongs, 'guess-'))}
+            </div>
+          )}
         </div>
 
         {/* 新歌 - latestSongs */}
-        <div
-          className={`home-banner-card ${expandedSection === 'new' ? 'expanded' : ''}`}
-          onClick={() => toggleSection('new')}
-        >
-          <div className="home-banner-icon">
-            <FaMusic />
+        <div className="home-banner-group">
+          <div
+            className={`home-banner-card ${expandedSection === 'new' ? 'expanded' : ''}`}
+            onClick={() => toggleSection('new')}
+          >
+            <div className="home-banner-icon">
+              <FaMusic />
+            </div>
+            <div className="home-banner-text">
+              <div className="home-banner-title">新歌</div>
+              <div className="home-banner-desc">最新音乐首发</div>
+            </div>
+            <div className="home-banner-arrow">
+              {expandedSection === 'new' ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
           </div>
-          <div className="home-banner-text">
-            <div className="home-banner-title">新歌</div>
-            <div className="home-banner-desc">最新音乐首发</div>
-          </div>
-          <div className="home-banner-arrow">
-            {expandedSection === 'new' ? <FaChevronUp /> : <FaChevronDown />}
-          </div>
+          {expandedSection === 'new' && latestSongs.length > 0 && (
+            <div className="home-banner-expanded">
+              {latestSongs.map((song, index) => renderSongItem(song, index, latestSongs, 'new-'))}
+            </div>
+          )}
         </div>
 
         {/* 排行 */}
-        <div
-          className={`home-banner-card ${expandedSection === 'rank' ? 'expanded' : ''}`}
-          onClick={() => toggleSection('rank')}
-        >
-          <div className="home-banner-icon">
-            <FaChartLine />
+        <div className="home-banner-group">
+          <div
+            className={`home-banner-card ${expandedSection === 'rank' ? 'expanded' : ''}`}
+            onClick={() => toggleSection('rank')}
+          >
+            <div className="home-banner-icon">
+              <FaChartLine />
+            </div>
+            <div className="home-banner-text">
+              <div className="home-banner-title">排行</div>
+              <div className="home-banner-desc">热门歌曲榜单</div>
+            </div>
+            <div className="home-banner-arrow">
+              {expandedSection === 'rank' ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
           </div>
-          <div className="home-banner-text">
-            <div className="home-banner-title">排行</div>
-            <div className="home-banner-desc">热门歌曲榜单</div>
-          </div>
-          <div className="home-banner-arrow">
-            {expandedSection === 'rank' ? <FaChevronUp /> : <FaChevronDown />}
-          </div>
+          {expandedSection === 'rank' && topSongs.length > 0 && (
+            <div className="home-banner-expanded">
+              {topSongs.map((song, index) => renderSongItem(song, index, topSongs, 'rank-'))}
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Expandable Song Lists */}
-      {expandedSection === 'daily' && dailySongs.length > 0 && (
-        <div className="home-banner-expanded">
-          {dailySongs.map((song, index) => renderSongItem(song, index, dailySongs, 'daily-'))}
-        </div>
-      )}
-
-      {expandedSection === 'guess' && randomSongs.length > 0 && (
-        <div className="home-banner-expanded">
-          {randomSongs.map((song, index) => renderSongItem(song, index, randomSongs, 'guess-'))}
-        </div>
-      )}
-
-      {expandedSection === 'new' && latestSongs.length > 0 && (
-        <div className="home-banner-expanded">
-          {latestSongs.map((song, index) => renderSongItem(song, index, latestSongs, 'new-'))}
-        </div>
-      )}
-
-      {expandedSection === 'rank' && topSongs.length > 0 && (
-        <div className="home-banner-expanded">
-          {topSongs.map((song, index) => renderSongItem(song, index, topSongs, 'rank-'))}
-        </div>
-      )}
 
       {/* 推荐歌单 - Only Playlists */}
       <section className="home-section">

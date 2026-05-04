@@ -116,6 +116,11 @@
   margin-bottom: 2rem;
 }
 
+.home-banner-group {
+  display: flex;
+  flex-direction: column;
+}
+
 .home-banner-card {
   display: flex;
   align-items: center;
@@ -193,7 +198,6 @@
   border: 1px solid #F0E4D0;
   border-top: none;
   border-radius: 0 0 16px 16px;
-  margin-bottom: 2rem;
   overflow: hidden;
   animation: slideDown 0.2s ease;
 }
