@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiList, FiImage, FiMusic, FiX, FiDownload } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiList, FiImage, FiMusic, FiX } from 'react-icons/fi';
 import { adminApi } from '../api';
 import './Playlists.css';
 
@@ -28,7 +28,6 @@ function Playlists() {
     const [searchResults, setSearchResults] = useState([]);
     const [songSearchLoading, setSongSearchLoading] = useState(false);
     const [songsLoading, setSongsLoading] = useState(false);
-    const [importing, setImporting] = useState(false);
 
     useEffect(() => {
         loadPlaylists();
@@ -174,23 +173,6 @@ function Playlists() {
             console.error('Failed to load songs:', error);
         } finally {
             setSongSearchLoading(false);
-        }
-    };
-
-    const handleImportMusic = async () => {
-        if (!confirm('确定要导入 qqyinyue 目录下的本地音乐文件吗？')) return;
-        setImporting(true);
-        try {
-            const response = await adminApi.importLocalMusic();
-            const { imported, skipped } = response.data;
-            let msg = `导入完成！成功导入 ${imported} 首歌曲`;
-            if (skipped > 0) msg += `，跳过 ${skipped} 首`;
-            alert(msg);
-            await loadAllSongs();
-        } catch (error) {
-            alert(error.response?.data?.error || '导入失败');
-        } finally {
-            setImporting(false);
         }
     };
 
@@ -515,14 +497,6 @@ function Playlists() {
                             {/* Search and add songs */}
                             <div className="songs-section">
                                 <h3>添加歌曲</h3>
-                                <button
-                                    className="btn-primary"
-                                    onClick={handleImportMusic}
-                                    disabled={importing}
-                                    style={{ marginBottom: '10px', fontSize: '12px', padding: '6px 12px' }}
-                                >
-                                    <FiDownload /> {importing ? '导入中...' : '导入本地音乐到曲库'}
-                                </button>
                                 <div className="song-search-bar">
                                     <input
                                         type="text"
