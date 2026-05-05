@@ -157,11 +157,9 @@ function Home() {
               {expandedSection === 'daily' ? <FaChevronUp /> : <FaChevronDown />}
             </div>
           </div>
-          {expandedSection === 'daily' && dailySongs.length > 0 && (
-            <div className="home-banner-expanded">
-              {dailySongs.map((song, index) => renderSongItem(song, index, dailySongs, 'daily-'))}
-            </div>
-          )}
+          <div className={`home-banner-expanded ${expandedSection === 'daily' && dailySongs.length > 0 ? 'show' : ''}`}>
+            {dailySongs.map((song, index) => renderSongItem(song, index, dailySongs, 'daily-'))}
+          </div>
         </div>
 
         {/* 猜你喜欢 - randomSongs */}
@@ -181,11 +179,9 @@ function Home() {
               {expandedSection === 'guess' ? <FaChevronUp /> : <FaChevronDown />}
             </div>
           </div>
-          {expandedSection === 'guess' && randomSongs.length > 0 && (
-            <div className="home-banner-expanded">
-              {randomSongs.map((song, index) => renderSongItem(song, index, randomSongs, 'guess-'))}
-            </div>
-          )}
+          <div className={`home-banner-expanded ${expandedSection === 'guess' && randomSongs.length > 0 ? 'show' : ''}`}>
+            {randomSongs.map((song, index) => renderSongItem(song, index, randomSongs, 'guess-'))}
+          </div>
         </div>
 
         {/* 新歌 - latestSongs */}
@@ -205,11 +201,9 @@ function Home() {
               {expandedSection === 'new' ? <FaChevronUp /> : <FaChevronDown />}
             </div>
           </div>
-          {expandedSection === 'new' && latestSongs.length > 0 && (
-            <div className="home-banner-expanded">
-              {latestSongs.map((song, index) => renderSongItem(song, index, latestSongs, 'new-'))}
-            </div>
-          )}
+          <div className={`home-banner-expanded ${expandedSection === 'new' && latestSongs.length > 0 ? 'show' : ''}`}>
+            {latestSongs.map((song, index) => renderSongItem(song, index, latestSongs, 'new-'))}
+          </div>
         </div>
 
         {/* 排行 */}
@@ -229,11 +223,9 @@ function Home() {
               {expandedSection === 'rank' ? <FaChevronUp /> : <FaChevronDown />}
             </div>
           </div>
-          {expandedSection === 'rank' && topSongs.length > 0 && (
-            <div className="home-banner-expanded">
-              {topSongs.map((song, index) => renderSongItem(song, index, topSongs, 'rank-'))}
-            </div>
-          )}
+          <div className={`home-banner-expanded ${expandedSection === 'rank' && topSongs.length > 0 ? 'show' : ''}`}>
+            {topSongs.map((song, index) => renderSongItem(song, index, topSongs, 'rank-'))}
+          </div>
         </div>
       </div>
 
