@@ -112,6 +112,7 @@
 .home-banner {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
   gap: 1.25rem;
   margin-bottom: 1.75rem;
 }
@@ -119,7 +120,7 @@
 .home-banner-group {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  min-width: 0;
 }
 
 .home-banner-card {
@@ -127,6 +128,8 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
   background: #FFFAF2;
   border: 1px solid #F0E4D0;
   border-radius: 16px;
