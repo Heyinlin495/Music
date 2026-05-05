@@ -12,6 +12,8 @@ function Player() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showLyrics, setShowLyrics] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const progressBarRef = useRef(null);
   const { isAuthenticated } = useAuthStore();
   const {
     currentSong,
@@ -126,17 +128,52 @@ function Player() {
     }
   }, [repeat, playNext]);
 
-  const handleProgressClick = (e) => {
-    const bar = e.currentTarget;
+  const seekToPercent = useCallback((clientX) => {
+    const bar = progressBarRef.current;
+    if (!bar) return;
     const rect = bar.getBoundingClientRect();
-    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     const totalDur = duration || currentSong?.duration || 0;
     const newTime = percent * totalDur;
-    if (audioRef.current && totalDur > 0) {
-      audioRef.current.currentTime = newTime;
+    if (totalDur > 0) {
       setProgress(newTime);
+      if (audioRef.current) {
+        audioRef.current.currentTime = newTime;
+      }
     }
+  }, [duration, currentSong]);
+
+  const handleProgressClick = (e) => {
+    seekToPercent(e.clientX);
   };
+
+  const handleTouchStart = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    const touch = e.touches[0];
+    seekToPercent(touch.clientX);
+  };
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    seekToPercent(touch.clientX);
+  }, [isDragging, seekToPercent]);
+
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd);
+      return () => {
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [isDragging, handleTouchMove, handleTouchEnd]);
 
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
@@ -238,7 +275,12 @@ function Player() {
           <div className="progress-container">
             <span className="time">{formatTime(progress)}</span>
             <div className="progress-bar-wrapper">
-              <div className="progress-bar" onClick={handleProgressClick}>
+              <div
+                className={`progress-bar ${isDragging ? 'dragging' : ''}`}
+                ref={progressBarRef}
+                onClick={handleProgressClick}
+                onTouchStart={handleTouchStart}
+              >
                 <div
                   className="progress-fill"
                   style={{ width: `${progressPercent}%` }}

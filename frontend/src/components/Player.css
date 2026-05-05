@@ -242,8 +242,19 @@
   background: #8FD490;
 }
 
-.progress-bar:hover {
+.progress-bar:hover,
+.progress-bar.dragging {
   height: 5px;
+}
+
+.progress-bar.dragging .progress-fill {
+  background: #8FD490;
+  transition: none;
+}
+
+.progress-bar.dragging .progress-dot {
+  transform: translate(-50%, -50%) scale(1.5);
+  background: #8FD490;
 }
 
 .player-actions {
