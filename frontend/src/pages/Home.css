@@ -112,7 +112,7 @@
 .home-banner {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.875rem;
+  gap: 1.25rem;
   margin-bottom: 1.75rem;
 }
 
