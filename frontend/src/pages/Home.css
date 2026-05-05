@@ -119,6 +119,7 @@
 .home-banner-group {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .home-banner-card {
