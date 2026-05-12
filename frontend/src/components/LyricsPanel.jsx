@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { FaTimes, FaMusic } from 'react-icons/fa';
-import { musicApi } from '../api';
 import { usePlayerStore } from '../store/playerStore';
 import './LyricsPanel.css';
 
@@ -41,40 +40,25 @@ function parseLRC(lrcText) {
 function LyricsPanel({ onClose }) {
   const { currentSong, progress } = usePlayerStore();
   const [lyrics, setLyrics] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const lyricsListRef = useRef(null);
   const activeLineRef = useRef(null);
 
   useEffect(() => {
     if (!currentSong) return;
 
-    setLoading(true);
-    setError('');
     setLyrics([]);
 
-    // Try fetching from QQ Music API first, fall back to song's own lyrics field
-    musicApi.getLyrics(currentSong.id)
-      .then(res => {
-        const lrcText = res.data?.lyric;
-        if (lrcText) {
-          setLyrics(parseLRC(lrcText));
-        } else if (currentSong.lyrics) {
-          // Plain text lyrics (from upload)
-          setLyrics([{ time: 0, text: currentSong.lyrics }]);
-        } else {
-          setError('暂无歌词');
-        }
-      })
-      .catch(() => {
-        // Fall back to song's stored lyrics
-        if (currentSong.lyrics) {
-          setLyrics([{ time: 0, text: currentSong.lyrics }]);
-        } else {
-          setError('暂无歌词');
-        }
-      })
-      .finally(() => setLoading(false));
+    // Use the song's stored lyrics field
+    if (currentSong.lyrics) {
+      // Try parsing as LRC format first
+      const parsed = parseLRC(currentSong.lyrics);
+      if (parsed.length > 0) {
+        setLyrics(parsed);
+      } else {
+        // Plain text lyrics
+        setLyrics([{ time: 0, text: currentSong.lyrics }]);
+      }
+    }
   }, [currentSong?.id]);
 
   const activeIndex = useMemo(() => {
@@ -123,9 +107,7 @@ function LyricsPanel({ onClose }) {
         </div>
 
         <div className="lyrics-list" ref={lyricsListRef}>
-          {loading && <div className="lyrics-status">加载歌词中...</div>}
-          {error && !loading && <div className="lyrics-status">{error}</div>}
-          {!loading && !error && lyrics.length > 0 && (
+          {lyrics.length > 0 ? (
             lyrics.map((line, index) => (
               <p
                 key={index}
@@ -135,8 +117,7 @@ function LyricsPanel({ onClose }) {
                 {line.text}
               </p>
             ))
-          )}
-          {!loading && !error && lyrics.length === 0 && (
+          ) : (
             <div className="lyrics-status">暂无歌词</div>
           )}
         </div>

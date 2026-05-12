@@ -56,17 +56,6 @@ function Player() {
             setIsPlaying(false);
           });
         }
-      } else if (currentSong.songmid) {
-        // Use QQ Music streaming proxy
-        audioRef.current.src = `/api/music/stream/${currentSong.id}`;
-        if (isPlaying) {
-          audioRef.current.play().catch(err => {
-            console.error('QQ音乐播放失败:', err);
-            setAudioError(true);
-            setErrorMessage('QQ音乐源不可用，可能需要更新Key');
-            setIsPlaying(false);
-          });
-        }
       } else {
         setAudioError(true);
         setErrorMessage('该歌曲没有可用的音频源');
@@ -76,7 +65,7 @@ function Player() {
   }, [currentSong]);
 
   useEffect(() => {
-    if (audioRef.current && currentSong && (currentSong.fileUrl || currentSong.songmid)) {
+    if (audioRef.current && currentSong && currentSong.fileUrl) {
       if (isPlaying) {
         audioRef.current.play().catch(err => {
           console.error('播放失败:', err);

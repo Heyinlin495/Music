@@ -96,11 +96,6 @@ export const usersApi = {
   deleteHistoryBatch: (songIds) => api.delete('/users/me/history/batch', { data: songIds }),
 };
 
-// Music API (lyrics, streaming)
-export const musicApi = {
-  getLyrics: (songId) => api.get(`/music/lyrics/${songId}`),
-};
-
 // Comments API
 export const commentsApi = {
   getBySong: (songId, page = 0) => api.get(`/comments/song/${songId}?page=${page}`),

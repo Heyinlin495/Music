@@ -34,7 +34,6 @@ public class Song {
     private Integer duration; // in seconds
     private String coverUrl;
     private String fileUrl;
-    private String songmid;
     @Column(columnDefinition = "TEXT")
     private String lyrics;
 

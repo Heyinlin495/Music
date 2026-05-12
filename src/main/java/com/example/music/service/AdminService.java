@@ -140,7 +140,6 @@ public class AdminService {
                 .duration(song.getDuration())
                 .coverUrl(song.getCoverUrl())
                 .fileUrl(song.getFileUrl())
-                .songmid(song.getSongmid())
                 .playCount(song.getPlayCount())
                 .uploaderId(song.getUploader() != null ? song.getUploader().getId() : null)
                 .uploaderName(song.getUploader() != null ? song.getUploader().getNickname() : null)

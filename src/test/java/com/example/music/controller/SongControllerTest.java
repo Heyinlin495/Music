@@ -107,13 +107,12 @@ class SongControllerTest {
         SongDTO song = SongDTO.builder()
                 .id(2L).title("Full Song").artist("Artist").album("Album")
                 .genre("Rock").duration(240).playCount(500L)
-                .songmid("abc123").lyrics("Some lyrics").isFavorite(true).build();
+                .lyrics("Some lyrics").isFavorite(true).build();
         when(songService.getSongById(eq(2L), any())).thenReturn(Optional.of(song));
 
         mockMvc.perform(get("/api/songs/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title").value("Full Song"))
-                .andExpect(jsonPath("$.data.songmid").value("abc123"))
                 .andExpect(jsonPath("$.data.isFavorite").value(true));
     }
 }

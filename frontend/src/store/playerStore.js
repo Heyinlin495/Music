@@ -91,7 +91,7 @@ export const usePlayerStore = create((set, get) => ({
     const { audioRef, isPlaying, currentSong } = get();
     if (!currentSong) return;
 
-    if (audioRef && (currentSong.fileUrl || currentSong.songmid)) {
+    if (audioRef && currentSong.fileUrl) {
       if (isPlaying) {
         audioRef.pause();
       } else {

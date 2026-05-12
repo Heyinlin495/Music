@@ -236,7 +236,6 @@ public class SongService {
                 .duration(song.getDuration())
                 .coverUrl(song.getCoverUrl())
                 .fileUrl(song.getFileUrl())
-                .songmid(song.getSongmid())
                 .lyrics(song.getLyrics())
                 .playCount(song.getPlayCount())
                 .uploaderId(song.getUploader() != null ? song.getUploader().getId() : null)

@@ -2,13 +2,11 @@ package com.example.music.controller;
 
 import com.example.music.entity.Song;
 import com.example.music.repository.SongRepository;
-import com.example.music.service.QQMusicService;
 import com.example.music.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.InputStream;
@@ -21,58 +19,8 @@ import java.util.Map;
 public class MusicStreamController {
 
     private final SongRepository songRepository;
-    private final QQMusicService qqMusicService;
-    private final RestTemplate restTemplate;
     private final StorageService storageService;
 
-    @GetMapping("/stream/{songId}")
-    public ResponseEntity<byte[]> streamSong(@PathVariable Long songId) {
-        Song song = songRepository.findById(songId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
-
-        if (song.getSongmid() == null) {
-            log.warn("Song {} has no songmid", songId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "该歌曲没有QQ音乐源");
-        }
-
-        log.info("Streaming song {} (songmid: {})", songId, song.getSongmid());
-        String audioUrl = qqMusicService.getAudioUrl(song.getSongmid());
-        log.info("Audio URL for song {}: {}", songId, audioUrl);
-        if (audioUrl == null || audioUrl.isEmpty()) {
-            log.warn("No audio URL available for song {} (songmid: {})", songId, song.getSongmid());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "无法获取音频URL，QQ音乐Key可能已过期");
-        }
-
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-
-            ResponseEntity<byte[]> response = restTemplate.exchange(
-                    audioUrl, HttpMethod.GET, entity, byte[].class);
-
-            if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "获取音频数据失败");
-            }
-
-            byte[] audioData = response.getBody();
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType("audio/mpeg"))
-                    .header(HttpHeaders.ACCEPT_RANGES, "bytes")
-                    .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(audioData.length))
-                    .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
-                    .body(audioData);
-        } catch (ResponseStatusException e) {
-            throw e;
-        } catch (Exception e) {
-            log.warn("Error streaming song {} (songmid: {}): {}", songId, song.getSongmid(), e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "音频流获取失败: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Stream locally stored music files with Range request support.
-     */
     @GetMapping("/stream/local/{songId}")
     public ResponseEntity<?> streamLocalSong(
             @PathVariable Long songId,
@@ -167,22 +115,5 @@ public class MusicStreamController {
             return AUDIO_MIME_TYPES.getOrDefault(ext, "application/octet-stream");
         }
         return "application/octet-stream";
-    }
-
-    @GetMapping("/lyrics/{songId}")
-    public ResponseEntity<Map<String, Object>> getLyrics(@PathVariable Long songId) {
-        Song song = songRepository.findById(songId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
-
-        if (song.getSongmid() == null) {
-            return ResponseEntity.ok(Map.of("result", 404, "message", "No QQ Music source"));
-        }
-
-        String lyrics = qqMusicService.getLyrics(song.getSongmid());
-        if (lyrics == null) {
-            return ResponseEntity.ok(Map.of("result", 404, "message", "Lyrics not available"));
-        }
-
-        return ResponseEntity.ok(Map.of("result", 200, "lyric", lyrics));
     }
 }

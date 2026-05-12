@@ -19,7 +19,6 @@ public class SongDTO {
     private Integer duration;
     private String coverUrl;
     private String fileUrl;
-    private String songmid;
     private String lyrics;
     private Long playCount;
     private Long uploaderId;

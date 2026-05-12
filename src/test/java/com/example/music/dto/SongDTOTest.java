@@ -14,7 +14,7 @@ class SongDTOTest {
         SongDTO dto = SongDTO.builder()
                 .id(1L).title("Song").artist("Artist").album("Album")
                 .genre("Pop").duration(180).coverUrl("cover.jpg")
-                .fileUrl("file.mp3").songmid("abc123").lyrics("Lyrics")
+                .fileUrl("file.mp3").lyrics("Lyrics")
                 .playCount(100L).uploaderId(1L).uploaderName("User")
                 .createdAt(now).isFavorite(true).build();
 
@@ -26,7 +26,6 @@ class SongDTOTest {
         assertEquals(180, dto.getDuration());
         assertEquals("cover.jpg", dto.getCoverUrl());
         assertEquals("file.mp3", dto.getFileUrl());
-        assertEquals("abc123", dto.getSongmid());
         assertEquals("Lyrics", dto.getLyrics());
         assertEquals(100L, dto.getPlayCount());
         assertEquals(1L, dto.getUploaderId());
