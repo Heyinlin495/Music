@@ -1,6 +1,6 @@
 # Music - 自托管音乐流媒体平台
 
-一个全栈音乐流媒体平台，支持本地音乐上传管理与 QQ 音乐在线播放，提供用户端和管理后台两个独立 SPA。
+一个自托管全栈音乐流媒体平台，支持本地音乐上传管理，提供用户端和管理后台两个独立 SPA。
 
 ## 功能特性
 
@@ -36,7 +36,6 @@
 | 文件存储 | 本地文件系统 / MinIO / 阿里云 OSS（可切换） |
 | 容器化 | Docker, Docker Compose, Nginx |
 | CI/CD | GitHub Actions (CI + 自动部署到 GHCR) |
-| 外部服务 | QQ 音乐 API（通过 jsososo/QQMusicApi 代理） |
 
 ## 项目结构
 
@@ -53,7 +52,7 @@ Music/
 ├── src/test/                           # 单元测试
 ├── frontend/                           # 用户端 React SPA (/frontend/)
 ├── admin/                              # 管理后台 React SPA (/admin/)
-├── docker/                             # Nginx、MySQL、QQ 音乐 API 配置
+├── docker/                             # Nginx、MySQL 配置
 ├── .github/workflows/                  # CI/CD 工作流
 ├── Dockerfile                          # 多阶段构建
 ├── docker-compose.yml                  # 开发环境
@@ -126,15 +125,24 @@ cd admin && npm install && npm run dev
 |------|------|
 | `POST /api/auth/login` | 登录 |
 | `POST /api/auth/register` | 注册 |
-| `GET /api/songs` | 歌曲列表 |
+| `GET /api/auth/captcha` | 获取验证码 |
+| `GET /api/songs` | 歌曲列表（分页） |
 | `GET /api/songs/search` | 搜索歌曲 |
+| `GET /api/songs/genres` | 获取流派列表 |
+| `GET /api/songs/genres/summary` | 流派摘要 |
+| `GET /api/songs/daily` | 每日推荐 |
+| `GET /api/songs/top` | 热门歌曲 |
+| `GET /api/songs/latest` | 最新歌曲 |
+| `GET /api/songs/random` | 随机歌曲 |
 | `POST /api/songs/{id}/play` | 记录播放 |
-| `GET /api/playlists` | 歌单列表 |
+| `POST /api/songs` | 上传歌曲 |
+| `GET /api/playlists` | 公开歌单列表 |
+| `GET /api/playlists/featured` | 推荐歌单 |
+| `GET /api/playlists/my` | 我的歌单 |
 | `GET /api/users/me` | 当前用户信息 |
 | `GET /api/users/me/favorites` | 收藏列表 |
 | `GET /api/users/me/history` | 播放历史 |
-| `GET /api/music/stream/{id}` | QQ 音乐流 |
-| `GET /api/music/stream/local/{id}` | 本地文件流 |
+| `GET /api/music/stream/local/{id}` | 本地音乐流（支持 Range） |
 | `GET /api/admin/**` | 管理接口（需 ADMIN 角色） |
 | `GET /api/health` | 健康检查 |
 
