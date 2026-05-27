@@ -96,11 +96,4 @@ export const usersApi = {
   deleteHistoryBatch: (songIds) => api.delete('/users/me/history/batch', { data: songIds }),
 };
 
-// Comments API
-export const commentsApi = {
-  getBySong: (songId, page = 0) => api.get(`/comments/song/${songId}?page=${page}`),
-  add: (songId, content) => api.post(`/comments/song/${songId}`, { content }),
-  delete: (id) => api.delete(`/comments/${id}`),
-};
-
 export default api;

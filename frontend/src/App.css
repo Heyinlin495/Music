@@ -14,7 +14,7 @@
 .main-content {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 88px;
+  margin-bottom: 80px;
 }
 
 .main-content.no-player {
@@ -105,6 +105,6 @@
   }
 
   .main-content {
-    margin-bottom: 72px;
+    margin-bottom: 64px;
   }
 }
