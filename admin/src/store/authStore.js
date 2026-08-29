@@ -13,12 +13,16 @@ export const useAuthStore = create((set) => ({
             set({ loading: true });
             const response = await authApi.login(username, password, captchaId, captchaCode);
             const result = response.data;
-            
-            if (!result.success) {
-                throw new Error(result.message || '登录失败');
+
+            if (!result?.success) {
+                throw new Error(result?.message || '登录失败');
             }
-            
+
             const { token, userId, username: userName, nickname, avatar } = result.data;
+
+            if (!token) {
+                throw new Error('登录响应异常，未获取到 token');
+            }
 
             localStorage.setItem('admin_token', token);
 
@@ -43,9 +47,9 @@ export const useAuthStore = create((set) => ({
         } catch (error) {
             set({ loading: false });
             localStorage.removeItem('admin_token');
-            return { 
-                success: false, 
-                error: error.response?.data?.message || error.message || '登录失败' 
+            return {
+                success: false,
+                error: error.message || '登录失败'
             };
         }
     },

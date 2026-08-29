@@ -1,0 +1,19 @@
+- generic [ref=e4]:
+  - heading "管理后台" [level=1] [ref=e5]
+  - paragraph [ref=e6]: 音乐平台管理系统
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: 用户名
+      - textbox "请输入管理员用户名" [ref=e10]
+    - generic [ref=e11]:
+      - generic [ref=e12]: 密码
+      - generic [ref=e13]:
+        - textbox "请输入密码" [ref=e14]
+        - button [ref=e15] [cursor=pointer]
+    - generic [ref=e19]:
+      - generic [ref=e20]: 验证码
+      - generic [ref=e21]:
+        - textbox "请输入验证码" [ref=e22]
+        - generic "点击刷新验证码" [ref=e23] [cursor=pointer]: 加载中...
+    - button "登录" [disabled] [ref=e25]
+  - generic [ref=e26]: "默认账号: admin / admin123"
